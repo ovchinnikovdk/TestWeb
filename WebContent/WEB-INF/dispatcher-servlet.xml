@@ -49,7 +49,7 @@
 			</props>
 		</property>
 	</bean>
-
+	<bean id="testWebManager" class="com.service.TestWebManager"/>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	<bean id="transactionManager"
