@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<project name="TestWeb" default="deploy">
+
+	<property file="build.properties"/>
+	<property name="dist.dir" value="dist"/>
+	
+	<path id="compile.classpath">
+		<fileset dir="WebContent/WEB-INF/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	
+	<target name="init">
+		<mkdir dir="build/classes" />
+		<mkdir dir="dist" />
+	</target>
+
+	<target name="compile" depends="init">
+		<javac destdir="build/classes" debug="true" srcdir="src" source="1.7" target="1.7">
+			<classpath refid="compile.classpath" />
+		</javac>
+	</target>
+
+	<target name="copy-resources" depends="compile">
+		<copy todir="build/classes">
+			<fileset dir="resources">
+				<include name="**/*.xml"/>
+				<include name="**/*.properties"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="war" depends="copy-resources">
+		<war destfile="dist/testweb.war" webxml="WebContent/WEB-INF/web.xml">
+			<fileset dir="WebContent" />
+			<lib dir="WebContent/WEB-INF/lib" />
+			<zipfileset dir="WebContent/resources" prefix="resources" />
+			<classes dir="build/classes" />
+		</war>
+	</target>
+
+	<target name="deploy" depends="war">
+		<copy todir="${deploy.path}" preservelastmodified="true">
+			<fileset dir="${dist.dir}">
+				<include name="*.war" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean">
+		<delete dir="dist" />
+		<delete dir="build" />
+	</target>
+
+</project>
